@@ -118,9 +118,11 @@ bool BlockDeduplicator::deduplicate()
                 }
 			}
 		}
-
-		if (!applyTagReplacement(m_items, m_replacedTags, m_optimizedAnnotation))
+        std::vector<cfg::OptimizedAnnotation> optimizedAnnotation;
+		if (!applyTagReplacement(m_items, m_replacedTags, optimizedAnnotation))
 			break;
+		else
+            m_optimizedAnnotations.push_back(optimizedAnnotation);
 	}
 	return iterations > 0;
 }
@@ -156,8 +158,8 @@ bool BlockDeduplicator::applyTagReplacement(
 	return changed;
 }
 
-const vector<cfg::OptimizedAnnotation> &BlockDeduplicator::getMOptimizedAnnotation() const {
-    return m_optimizedAnnotation;
+const vector<std::vector<cfg::OptimizedAnnotation>> &BlockDeduplicator::getMOptimizedAnnotations() const {
+    return m_optimizedAnnotations;
 }
 
 BlockDeduplicator::BlockIterator& BlockDeduplicator::BlockIterator::operator++()

@@ -69,10 +69,10 @@ public:
 	void appendProgramSize() { append(AssemblyItem(PushProgramSize)); }
 	void appendLibraryAddress(std::string const& _identifier) { append(newPushLibraryAddress(_identifier)); }
 
-    AssemblyItem appendJump() { auto ret = append(newPushTag()); append(solidity::Instruction::JUMP); m_annotation.appendJumptarget(m_items.size()-1, ret.data()); return ret; }
-    AssemblyItem appendJumpI() { auto ret = append(newPushTag()); append(solidity::Instruction::JUMPI); m_annotation.appendJumptarget(m_items.size()-1, ret.data()); return ret; }
-    AssemblyItem appendJump(AssemblyItem const& _tag) { auto ret = append(_tag.pushTag()); append(solidity::Instruction::JUMP); m_annotation.appendJumptarget(m_items.size()-1, _tag.data()); return ret; }
-    AssemblyItem appendJumpI(AssemblyItem const& _tag) { auto ret = append(_tag.pushTag()); append(solidity::Instruction::JUMPI); m_annotation.appendJumptarget(m_items.size()-1, _tag.data()); return ret; }
+    AssemblyItem appendJump() { auto ret = append(newPushTag()); append(dev::eth::Instruction::JUMP); m_annotation.appendJumptarget(m_items.size()-1, ret.data()); return ret; }
+    AssemblyItem appendJumpI() { auto ret = append(newPushTag()); append(dev::eth::Instruction::JUMPI); m_annotation.appendJumptarget(m_items.size()-1, ret.data()); return ret; }
+    AssemblyItem appendJump(AssemblyItem const& _tag) { auto ret = append(_tag.pushTag()); append(dev::eth::Instruction::JUMP); m_annotation.appendJumptarget(m_items.size()-1, _tag.data()); return ret; }
+    AssemblyItem appendJumpI(AssemblyItem const& _tag) { auto ret = append(_tag.pushTag()); append(dev::eth::Instruction::JUMPI); m_annotation.appendJumptarget(m_items.size()-1, _tag.data()); return ret; }
 
 	/// Adds a subroutine to the code (in the data section) and pushes its size (via a tag)
 	/// on the stack. @returns the pushsub assembly item.

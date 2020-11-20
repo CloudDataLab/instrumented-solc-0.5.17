@@ -152,6 +152,7 @@ static string const g_strIgnoreMissingFiles = "ignore-missing";
 static string const g_strColor = "color";
 static string const g_strNoColor = "no-color";
 static string const g_strNewReporter = "new-reporter";
+static string const g_strAnnotation = "annotation";
 
 static string const g_argAbi = g_strAbi;
 static string const g_argPrettyJson = g_strPrettyJson;
@@ -193,6 +194,7 @@ static string const g_argIgnoreMissingFiles = g_strIgnoreMissingFiles;
 static string const g_argColor = g_strColor;
 static string const g_argNoColor = g_strNoColor;
 static string const g_argNewReporter = g_strNewReporter;
+static string const g_argAnnotation = g_strAnnotation;
 
 /// Possible arguments to for --combined-json
 static set<string> const g_combinedJsonArgs
@@ -260,6 +262,7 @@ static bool needsHumanTargetedStdout(po::variables_map const& _args)
 		g_argAstJson,
 		g_argBinary,
 		g_argBinaryRuntime,
+        g_argAnnotation,
 		g_argMetadata,
 		g_argNatspecUser,
 		g_argNatspecDev,
@@ -466,6 +469,17 @@ void CommandLineInterface::handleGasEstimation(string const& _contract)
 			sout() << internalFunctions[name].asString() << endl;
 		}
 	}
+}
+
+void CommandLineInterface::handleAnnotation(std::string const &_contract)
+{
+    if (!m_args.count(g_argAnnotation))
+        return;
+    string data = m_compiler->annotation(_contract);
+    if (m_args.count(g_argOutputDir))
+        createFile(m_compiler->filesystemFriendlyName(_contract) + ".annotation", data);
+    else
+        cout << "Contract Annotation " << endl << data << endl;
 }
 
 bool CommandLineInterface::readInputFilesAndConfigureRemappings()
@@ -741,6 +755,7 @@ Allowed options)",
 		(g_argBinary.c_str(), "Binary of the contracts in hex.")
 		(g_argBinaryRuntime.c_str(), "Binary of the runtime part of the contracts in hex.")
 		(g_argAbi.c_str(), "ABI specification of the contracts.")
+		(g_argAnnotation.c_str(), "Annotation of the contract")
 		(g_argIR.c_str(), "Intermediate Representation (IR) of all contracts (EXPERIMENTAL).")
 		(g_argEWasm.c_str(), "EWasm text representation of all contracts (EXPERIMENTAL).")
 		(g_argSignatureHashes.c_str(), "Function signature hashes of the contracts.")

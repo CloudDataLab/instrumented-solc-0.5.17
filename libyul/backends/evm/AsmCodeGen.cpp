@@ -99,7 +99,9 @@ void EthAssemblyAdapter::appendLinkerSymbol(std::string const& _linkerSymbol)
 
 void EthAssemblyAdapter::appendJump(int _stackDiffAfter)
 {
-	appendInstruction(dev::eth::Instruction::JUMP);
+    unsigned jumpTag_index = m_assembly.items().size() - 1;
+    appendInstruction(dev::eth::Instruction::JUMP);
+    m_assembly.appendJumpTarget(jumpTag_index);
 	m_assembly.adjustDeposit(_stackDiffAfter);
 }
 
@@ -112,7 +114,9 @@ void EthAssemblyAdapter::appendJumpTo(LabelID _labelId, int _stackDiffAfter)
 void EthAssemblyAdapter::appendJumpToIf(LabelID _labelId)
 {
 	appendLabelReference(_labelId);
-	appendInstruction(dev::eth::Instruction::JUMPI);
+    unsigned jumpTag_index = m_assembly.items().size() - 1;
+    appendInstruction(dev::eth::Instruction::JUMPI);
+    m_assembly.appendJumpTarget(jumpTag_index);
 }
 
 void EthAssemblyAdapter::appendBeginsub(LabelID, int)

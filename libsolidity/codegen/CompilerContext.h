@@ -262,6 +262,11 @@ public:
 			ScopeGuard([&]{ _compilerContext.popVisitedNodes(); }) { _compilerContext.pushVisitedNodes(&_node); }
 	};
 
+    void appendJumpIntoAnnotation(eth::AssemblyItem const& _item){m_asm->appendJumpRetTarget(_item);}
+    void appendJumpAnnotattion_low(unsigned jump_index, unsigned tag_index) {m_asm->appendJumpTarget(jump_index, tag_index);}
+    void appendPublicEntry(eth::AssemblyItem const& _item1, eth::AssemblyItem const& _item2) {m_asm->appendPublicFunctionEntryAnnotation(_item1, _item2);}
+    void setFallBack(eth::AssemblyItem const& _item1) {m_asm->appendFallBackEntryAnnotation(_item1);}
+
 private:
 	/// Searches the inheritance hierarchy towards the base starting from @a _searchStart and returns
 	/// the first function definition that is overwritten by _function.

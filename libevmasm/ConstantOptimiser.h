@@ -28,6 +28,7 @@
 #include <libdevcore/Assertions.h>
 #include <libdevcore/CommonData.h>
 #include <libdevcore/CommonIO.h>
+#include <libAnnotation/binaryAnnotation.h>
 
 #include <vector>
 
@@ -53,8 +54,9 @@ public:
 		bool _isCreation,
 		size_t _runs,
 		langutil::EVMVersion _evmVersion,
-		Assembly& _assembly
-	);
+		Assembly& _assembly,
+        std::vector<cfg::OptimizedAnnotation>& _optimizedAnnotation
+    );
 
 protected:
 	/// This is the public API for the optimiser methods, but it doesn't need to be exposed to the caller.
@@ -94,9 +96,10 @@ protected:
 	}
 
 	/// Replaces all constants i by the code given in @a _replacement[i].
-	static void replaceConstants(AssemblyItems& _items, std::map<u256, AssemblyItems> const& _replacements);
+    static void replaceConstants(AssemblyItems& _items, std::map<u256, AssemblyItems> const& _replacements,
+                                 std::vector<cfg::OptimizedAnnotation>& _optimizedAnnotation);
 
-	Params m_params;
+    Params m_params;
 	u256 const& m_value;
 };
 

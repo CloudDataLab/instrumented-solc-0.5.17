@@ -295,6 +295,9 @@ public:
 
 	/// Overwrites the release/prerelease flag. Should only be used for testing.
 	void overwriteReleaseFlag(bool release) { m_release = release; }
+
+    std::string annotation(std::string const& _contractName) const;
+
 private:
 	/// The state per source unit. Filled gradually during parsing.
 	struct Source

@@ -353,6 +353,30 @@ size_t numberOfPops(AssemblyItems const& _items)
 bool PeepholeOptimiser::optimise()
 {
 	OptimiserState state {m_items, 0, std::back_inserter(m_optimisedItems)};
+    std::vector<cfg::OptimizedAnnotation> optimizedAnnotations;
+    while (state.i < m_items.size()) {
+        size_t start_index = state.i;
+        if (state.i == 28){
+            solAssert(true,"");
+        }
+        auto optimzedTermsbegin= m_optimisedItems.size();
+
+        applyMethods(state, PushPop(), OpPop(), DoublePush(), DoubleSwap(), CommutativeSwap(), SwapComparison(),
+                     JumpToNext(), UnreachableCode(), TagConjunctions(), Identity());
+
+        auto optimzedTermsend= m_optimisedItems.size();
+        size_t end_index = state.i - 1;
+
+        AssemblyItems tmp_oriItems;
+        AssemblyItems tmp_optimisedItems;
+        copy(&m_optimisedItems[optimzedTermsbegin], &m_optimisedItems[optimzedTermsend], back_inserter(tmp_optimisedItems));
+        copy(&m_items[start_index], &m_items[end_index+1], back_inserter(tmp_oriItems));
+        if(tmp_optimisedItems != tmp_oriItems) {
+            cfg::OptimzedItem optimzedItem = cfg::OptimzedItem(start_index, end_index, tmp_optimisedItems);
+            cfg::OptimizedAnnotation optimizedAnnotation = cfg::OptimizedAnnotation(1, "replace", optimzedItem);
+            optimizedAnnotations.push_back(optimizedAnnotation);
+        }
+    }
 	while (state.i < m_items.size())
 		applyMethods(
 			state,
@@ -368,8 +392,13 @@ bool PeepholeOptimiser::optimise()
 	))
 	{
 		m_items = std::move(m_optimisedItems);
+        m_optimizedAnnotations = optimizedAnnotations;
 		return true;
 	}
 	else
 		return false;
+}
+
+const vector<cfg::OptimizedAnnotation> &PeepholeOptimiser::getMOptimizedAnnotations() const {
+    return m_optimizedAnnotations;
 }

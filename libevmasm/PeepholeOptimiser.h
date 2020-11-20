@@ -23,6 +23,7 @@
 #include <vector>
 #include <cstddef>
 #include <iterator>
+#include <libAnnotation/binaryAnnotation.h>
 
 namespace dev
 {
@@ -50,6 +51,10 @@ public:
 private:
 	AssemblyItems& m_items;
 	AssemblyItems m_optimisedItems;
+    std::vector<cfg::OptimizedAnnotation> m_optimizedAnnotations;
+public:
+    const std::vector<cfg::OptimizedAnnotation> &getMOptimizedAnnotations() const;
+
 };
 
 }

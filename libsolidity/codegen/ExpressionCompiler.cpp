@@ -594,7 +594,8 @@ bool ExpressionCompiler::visit(FunctionCall const& _functionCall)
 				m_context << ((u256(1) << 32) - 1) << Instruction::AND;
 
 			m_context.appendJump(eth::AssemblyItem::JumpType::IntoFunction);
-			m_context << returnLabel;
+            m_context.appendJumpIntoAnnotation(returnLabel);
+            m_context << returnLabel;
 
 			unsigned returnParametersSize = CompilerUtils::sizeOnStack(function.returnParameterTypes());
 			// callee adds return parameters, but removes arguments and return label

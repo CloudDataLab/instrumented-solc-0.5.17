@@ -22,6 +22,7 @@
 #include <libevmasm/ConstantOptimiser.h>
 #include <libevmasm/Assembly.h>
 #include <libevmasm/GasMeter.h>
+#include <libAnnotation/binaryAnnotation.h>
 using namespace std;
 using namespace dev;
 using namespace dev::eth;
@@ -30,7 +31,8 @@ unsigned ConstantOptimisationMethod::optimiseConstants(
 	bool _isCreation,
 	size_t _runs,
 	langutil::EVMVersion _evmVersion,
-	Assembly& _assembly
+	Assembly& _assembly,
+    std::vector<cfg::OptimizedAnnotation>& _optimizedAnnotation
 )
 {
 	// TODO: design the optimiser in a way this is not needed
@@ -73,7 +75,7 @@ unsigned ConstantOptimisationMethod::optimiseConstants(
 			pendingReplacements[item.data()] = replacement;
 	}
 	if (!pendingReplacements.empty())
-		replaceConstants(_items, pendingReplacements);
+		replaceConstants(_items, pendingReplacements, _optimizedAnnotation);
 	return optimisations;
 }
 
@@ -106,7 +108,8 @@ size_t ConstantOptimisationMethod::bytesRequired(AssemblyItems const& _items)
 
 void ConstantOptimisationMethod::replaceConstants(
 	AssemblyItems& _items,
-	map<u256, AssemblyItems> const& _replacements
+	map<u256, AssemblyItems> const& _replacements,
+    std::vector<cfg::OptimizedAnnotation>& _optimizedAnnotation
 )
 {
 	AssemblyItems replaced;
@@ -118,7 +121,12 @@ void ConstantOptimisationMethod::replaceConstants(
 			if (it != _replacements.end())
 			{
 				replaced += it->second;
-				continue;
+                AssemblyItems tmp;
+                copy((it->second).begin(), (it->second).end(), back_inserter(tmp));
+                cfg::OptimzedItem optimzedItem = cfg::OptimzedItem(&item - &_items[0], &item - &_items[0], tmp);
+                cfg::OptimizedAnnotation optimizedAnnotation = cfg::OptimizedAnnotation(4, "replace", optimzedItem);
+                _optimizedAnnotation.push_back(optimizedAnnotation);
+                continue;
 			}
 		}
 		replaced.push_back(item);

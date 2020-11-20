@@ -34,6 +34,7 @@
 #include <iostream>
 #include <sstream>
 #include <memory>
+#include <libAnnotation/binaryAnnotation.h>
 
 namespace dev
 {
@@ -52,7 +53,7 @@ public:
 	AssemblyItem newData(bytes const& _data) { h256 h(dev::keccak256(asString(_data))); m_data[h] = _data; return AssemblyItem(PushData, h); }
 	bytes const& data(h256 const& _i) const { return m_data.at(_i); }
 	AssemblyItem newSub(AssemblyPointer const& _sub) { m_subs.push_back(_sub); return AssemblyItem(PushSub, m_subs.size() - 1); }
-	Assembly const& sub(size_t _sub) const { return *m_subs.at(_sub); }
+	const Assembly sub(size_t _sub) const { return *m_subs.at(_sub); }
 	Assembly& sub(size_t _sub) { return *m_subs.at(_sub); }
 	AssemblyItem newPushSubSize(u256 const& _subId) { return AssemblyItem(PushSubSize, _subId); }
 	AssemblyItem newPushLibraryAddress(std::string const& _identifier);
@@ -68,10 +69,10 @@ public:
 	void appendProgramSize() { append(AssemblyItem(PushProgramSize)); }
 	void appendLibraryAddress(std::string const& _identifier) { append(newPushLibraryAddress(_identifier)); }
 
-	AssemblyItem appendJump() { auto ret = append(newPushTag()); append(Instruction::JUMP); return ret; }
-	AssemblyItem appendJumpI() { auto ret = append(newPushTag()); append(Instruction::JUMPI); return ret; }
-	AssemblyItem appendJump(AssemblyItem const& _tag) { auto ret = append(_tag.pushTag()); append(Instruction::JUMP); return ret; }
-	AssemblyItem appendJumpI(AssemblyItem const& _tag) { auto ret = append(_tag.pushTag()); append(Instruction::JUMPI); return ret; }
+    AssemblyItem appendJump() { auto ret = append(newPushTag()); append(solidity::Instruction::JUMP); m_annotation.appendJumptarget(m_items.size()-1, ret.data()); return ret; }
+    AssemblyItem appendJumpI() { auto ret = append(newPushTag()); append(solidity::Instruction::JUMPI); m_annotation.appendJumptarget(m_items.size()-1, ret.data()); return ret; }
+    AssemblyItem appendJump(AssemblyItem const& _tag) { auto ret = append(_tag.pushTag()); append(solidity::Instruction::JUMP); m_annotation.appendJumptarget(m_items.size()-1, _tag.data()); return ret; }
+    AssemblyItem appendJumpI(AssemblyItem const& _tag) { auto ret = append(_tag.pushTag()); append(solidity::Instruction::JUMPI); m_annotation.appendJumptarget(m_items.size()-1, _tag.data()); return ret; }
 
 	/// Adds a subroutine to the code (in the data section) and pushes its size (via a tag)
 	/// on the stack. @returns the pushsub assembly item.
@@ -139,6 +140,13 @@ public:
 		StringMap const& _sourceCodes = StringMap()
 	) const;
 
+    void appendFunctionEntryAnnotation(AssemblyItem const& _tag) {m_annotation.appendFunctiontag(_tag.data());}
+    void appendPublicFunctionEntryAnnotation(AssemblyItem const& _tag1, AssemblyItem const& _tag2) {m_annotation.appendPublicFunctiontag(_tag1.data(),_tag2.data());}
+    void appendFallBackEntryAnnotation(AssemblyItem const& _tag) {m_annotation.setFallBackFunctionEntry(_tag.data());}
+    void appendJumpRetTarget(AssemblyItem const& tag){m_annotation.appendJumptarget(m_items.size()-1, tag.data());}
+    void appendJumpTarget(unsigned index) {AssemblyItem tag = m_items.at(index);  m_annotation.appendJumptarget(m_items.size()-1, tag.data());}
+    void appendJumpTarget(unsigned jump_index, unsigned tag_index) {AssemblyItem tag = m_items.at(tag_index);  m_annotation.appendJumptarget(jump_index, tag.data());}
+
 public:
 	// These features are only used by LLL
 	AssemblyItem newPushString(std::string const& _data) { h256 h(dev::keccak256(_data)); m_strings[h] = _data; return AssemblyItem(PushString, h); }
@@ -181,6 +189,21 @@ protected:
 	int m_deposit = 0;
 
 	langutil::SourceLocation m_currentSourceLocation;
+
+    cfg::Annotation m_annotation;
+
+    std::vector<std::vector<cfg::OptimizedAnnotation>> m_optimizedAnnotations;
+
+    AssemblyItems source_items;
+public:
+    const cfg::Annotation &getMAnnotation() const;
+
+    const std::vector<std::vector<cfg::OptimizedAnnotation>> &getMOptimizedAnnotations() const;
+
+    const AssemblyItems &getSourceItems() const;
+    // before optimized
+
+    std::string AnnotationString() const;
 };
 
 inline std::ostream& operator<<(std::ostream& _out, Assembly const& _a)

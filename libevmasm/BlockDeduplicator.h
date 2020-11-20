@@ -24,6 +24,7 @@
 #pragma once
 
 #include <libdevcore/Common.h>
+#include <libAnnotation/binaryAnnotation.h>
 
 #include <cstddef>
 #include <vector>
@@ -58,7 +59,8 @@ public:
 	static bool applyTagReplacement(
 		AssemblyItems& _items,
 		std::map<u256, u256> const& _replacements,
-		size_t _subID = size_t(-1)
+        std::vector<cfg::OptimizedAnnotation> &optimizedAnnotations,
+        size_t _subID = size_t(-1)
 	);
 
 private:
@@ -87,6 +89,9 @@ private:
 
 	std::map<u256, u256> m_replacedTags;
 	AssemblyItems& m_items;
+    std::vector<std::vector<cfg::OptimizedAnnotation>> m_optimizedAnnotations;
+public:
+    const std::vector<std::vector<cfg::OptimizedAnnotation>> &getMOptimizedAnnotations() const;
 };
 
 }

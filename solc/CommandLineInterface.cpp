@@ -479,7 +479,7 @@ void CommandLineInterface::handleAnnotation(std::string const &_contract)
     if (m_args.count(g_argOutputDir))
         createFile(m_compiler->filesystemFriendlyName(_contract) + ".annotation", data);
     else
-        cout << "Contract Annotation " << endl << data << endl;
+        sout() << "Contract Annotation " << endl << data << endl;
 }
 
 bool CommandLineInterface::readInputFilesAndConfigureRemappings()

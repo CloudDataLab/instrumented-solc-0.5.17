@@ -409,7 +409,8 @@ map<u256, u256> Assembly::optimiseInternal(
 	}
 
 	map<u256, u256> tagReplacements;
-    copy(m_items.begin(), m_items.end(), back_inserter(source_items));
+	if (source_items.size() == 0)
+        copy(m_items.begin(), m_items.end(), back_inserter(source_items));
     // Iterate until no new optimisation possibilities are found.
 	for (unsigned count = 1; count > 0;)
 	{

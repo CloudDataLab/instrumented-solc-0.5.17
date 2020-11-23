@@ -1509,6 +1509,7 @@ void CommandLineInterface::outputCompilationResults()
 		handleSignatureHashes(contract);
 		handleMetadata(contract);
 		handleABI(contract);
+		handleAnnotation(contract);
 		handleNatspec(true, contract);
 		handleNatspec(false, contract);
 	} // end of contracts iteration

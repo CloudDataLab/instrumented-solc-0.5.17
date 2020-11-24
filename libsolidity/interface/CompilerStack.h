@@ -323,6 +323,7 @@ private:
 		std::string yulIR; ///< Experimental Yul IR code.
 		std::string yulIROptimized; ///< Optimized experimental Yul IR code.
 		std::string eWasm; ///< Experimental eWasm text representation
+		std::string annotation;
 		eth::LinkerObject eWasmObject; ///< Experimental eWasm code
 		mutable std::unique_ptr<std::string const> metadata; ///< The metadata json that will be hashed into the chain.
 		mutable std::unique_ptr<Json::Value const> abi;

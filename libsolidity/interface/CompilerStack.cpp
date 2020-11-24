@@ -1019,6 +1019,7 @@ void CompilerStack::compileContract(
 	{
 		// Assemble runtime object.
 		compiledContract.runtimeObject = compiler->runtimeObject();
+		compiledContract.annotation = compiler->runtimeAnnotation();
 	}
 	catch(eth::AssemblyException const&)
 	{
@@ -1467,7 +1468,7 @@ Json::Value CompilerStack::gasEstimates(string const& _contractName) const
 std::string CompilerStack::annotation(std::string const &_contractName) const {
     Contract const& currentContract = contract(_contractName);
     if (currentContract.compiler)
-        return currentContract.compiler->runtimeAnnotation();
+        return currentContract.annotation;
     else
         return "";
 }

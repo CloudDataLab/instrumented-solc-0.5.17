@@ -171,7 +171,14 @@ public:
 	CompilerContext& appendJumpTo(
 		eth::AssemblyItem const& _tag,
 		eth::AssemblyItem::JumpType _jumpType = eth::AssemblyItem::JumpType::Ordinary
-	) { *m_asm << _tag.pushTag(); return appendJump(_jumpType); }
+	) {
+	    *m_asm << _tag.pushTag();
+        CompilerContext& ret = appendJump(_jumpType);
+	    if (_jumpType == eth::AssemblyItem::JumpType::Ordinary){
+	        m_asm->appendJumpTarget((m_asm->items()).size() - 2);
+	    }
+	    return ret;
+	}
 	/// Appends pushing of a new tag and @returns the new tag.
 	eth::AssemblyItem pushNewTag() { return m_asm->append(m_asm->newPushTag()).tag(); }
 	/// @returns a new tag without pushing any opcodes or data

@@ -139,7 +139,7 @@ void EthAssemblyAdapter::appendJumpInto(LabelID _labelId, LabelID _retLabelId, i
     eth::AssemblyItem item(dev::eth::Instruction::JUMP);
     item.setJumpType(eth::AssemblyItem::JumpType::IntoFunction);
     m_assembly.append(item);
-    m_assembly.appendJumpTarget(_retLabelId);
+    m_assembly.appendJumpTargetById(_retLabelId);
     m_assembly.adjustDeposit(_stackDiffAfter);
 }
 

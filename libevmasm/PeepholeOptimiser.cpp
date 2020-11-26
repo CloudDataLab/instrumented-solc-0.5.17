@@ -361,8 +361,12 @@ bool PeepholeOptimiser::optimise()
         }
         auto optimzedTermsbegin= m_optimisedItems.size();
 
-        applyMethods(state, PushPop(), OpPop(), DoublePush(), DoubleSwap(), CommutativeSwap(), SwapComparison(),
-                     JumpToNext(), UnreachableCode(), TagConjunctions(), Identity());
+        applyMethods(
+                state,
+                PushPop(), OpPop(), DoublePush(), DoubleSwap(), CommutativeSwap(), SwapComparison(),
+                IsZeroIsZeroJumpI(), JumpToNext(), UnreachableCode(),
+                TagConjunctions(), TruthyAnd(), Identity()
+        );
 
         auto optimzedTermsend= m_optimisedItems.size();
         size_t end_index = state.i - 1;

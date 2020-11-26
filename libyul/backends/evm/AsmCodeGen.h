@@ -53,6 +53,7 @@ public:
 	size_t namedLabel(std::string const& _name) override;
 	void appendLinkerSymbol(std::string const& _linkerSymbol) override;
 	void appendJump(int _stackDiffAfter) override;
+	void appendJumpOut(int _stackDiffAfter) override;
 	void appendJumpTo(LabelID _labelId, int _stackDiffAfter) override;
 	void appendJumpToIf(LabelID _labelId) override;
 	void appendBeginsub(LabelID, int) override;

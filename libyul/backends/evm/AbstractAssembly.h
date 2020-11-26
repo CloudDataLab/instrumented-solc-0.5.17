@@ -84,6 +84,8 @@ public:
 	/// This is helpful to stack height analysis if there is no continuing control flow.
 	virtual void appendJump(int _stackDiffAfter) = 0;
 
+	virtual void appendJumpOut(int _stackDiffAfter) = 0;
+
 	/// Append a jump-to-immediate operation.
 	/// @param _stackDiffAfter the stack adjustment after this instruction.
 	virtual void appendJumpTo(LabelID _labelId, int _stackDiffAfter = 0) = 0;

@@ -91,6 +91,11 @@ void EVMAssembly::appendLinkerSymbol(string const&)
 	yulAssert(false, "Linker symbols not yet implemented.");
 }
 
+void EVMAssembly::appendJumpOut(int _stackDiffAfter)
+{
+    appendJump(_stackDiffAfter);
+}
+
 void EVMAssembly::appendJump(int _stackDiffAfter)
 {
 	yulAssert(!m_evm15, "Plain JUMP used for EVM 1.5");

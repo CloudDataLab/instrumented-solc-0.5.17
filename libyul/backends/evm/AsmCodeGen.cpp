@@ -97,6 +97,14 @@ void EthAssemblyAdapter::appendLinkerSymbol(std::string const& _linkerSymbol)
 	m_assembly.appendLibraryAddress(_linkerSymbol);
 }
 
+void EthAssemblyAdapter::appendJumpOut(int _stackDiffAfter)
+{
+    dev::eth::AssemblyItem item(dev::eth::Instruction::JUMP);
+    item.setJumpType(dev::eth::AssemblyItem::JumpType::OutOfFunction);
+    m_assembly.append(item);
+    m_assembly.adjustDeposit(_stackDiffAfter);
+}
+
 void EthAssemblyAdapter::appendJump(int _stackDiffAfter)
 {
     unsigned jumpTag_index = m_assembly.items().size() - 1;

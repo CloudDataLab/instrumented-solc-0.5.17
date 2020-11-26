@@ -140,13 +140,33 @@ public:
 		StringMap const& _sourceCodes = StringMap()
 	) const;
 
-    void appendFunctionEntryAnnotation(AssemblyItem const& _tag) {m_annotation.appendFunctiontag(_tag.data());}
-    void appendPublicFunctionEntryAnnotation(AssemblyItem const& _tag1, AssemblyItem const& _tag2) {m_annotation.appendPublicFunctiontag(_tag1.data(),_tag2.data());}
-    void appendFallBackEntryAnnotation(AssemblyItem const& _tag) {m_annotation.setFallBackFunctionEntry(_tag.data());}
-    void appendJumpRetTarget(AssemblyItem const& tag){m_annotation.appendJumptarget(m_items.size()-1, tag.data());}
-    void appendJumpTarget(unsigned index) {AssemblyItem tag = m_items.at(index);  m_annotation.appendJumptarget(m_items.size()-1, tag.data());}
-    void appendJumpTarget(unsigned jump_index, unsigned tag_index) {AssemblyItem tag = m_items.at(tag_index);  m_annotation.appendJumptarget(jump_index, tag.data());}
-
+    void appendFunctionEntryAnnotation(AssemblyItem const& _tag) {
+        assertThrow(_tag.type() == Tag, Exception, "");
+        m_annotation.appendFunctiontag(_tag.data());
+    }
+    void appendPublicFunctionEntryAnnotation(AssemblyItem const& _tag1, AssemblyItem const& _tag2) {
+        assertThrow(_tag1.type() == Tag, Exception, "");
+        assertThrow(_tag2.type() == Tag, Exception, "");
+        m_annotation.appendPublicFunctiontag(_tag1.data(),_tag2.data());
+    }
+    void appendFallBackEntryAnnotation(AssemblyItem const& _tag) {
+        assertThrow(_tag.type() == Tag, Exception, "");
+        m_annotation.setFallBackFunctionEntry(_tag.data());
+    }
+    void appendJumpRetTarget(AssemblyItem const& tag){
+        assertThrow(tag.type() == Tag, Exception, "");
+        m_annotation.appendJumptarget(m_items.size()-1, tag.data());
+    }
+    void appendJumpTarget(unsigned index) {
+        assertThrow(m_items.at(index).type() == PushTag, Exception, "");
+        AssemblyItem tag = m_items.at(index);
+        m_annotation.appendJumptarget(m_items.size()-1, tag.data());
+    }
+    void appendJumpTarget(unsigned jump_index, unsigned tag_index) {
+        assertThrow(m_items.at(tag_index).type() == Tag, Exception, "");
+        AssemblyItem tag = m_items.at(tag_index);
+        m_annotation.appendJumptarget(jump_index, tag.data());
+    }
 public:
 	// These features are only used by LLL
 	AssemblyItem newPushString(std::string const& _data) { h256 h(dev::keccak256(_data)); m_strings[h] = _data; return AssemblyItem(PushString, h); }

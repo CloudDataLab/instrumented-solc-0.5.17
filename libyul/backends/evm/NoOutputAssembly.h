@@ -59,6 +59,7 @@ public:
 	void appendLinkerSymbol(std::string const& _name) override;
 
 	void appendJump(int _stackDiffAfter) override;
+	void appendJumpOut(int _stackDiffAfter) override {appendJump(_stackDiffAfter);}
 	void appendJumpTo(LabelID _labelId, int _stackDiffAfter) override;
 	void appendJumpToIf(LabelID _labelId) override;
 	void appendBeginsub(LabelID _labelId, int _arguments) override;

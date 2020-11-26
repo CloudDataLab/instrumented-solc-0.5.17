@@ -72,6 +72,9 @@ public:
 	void appendDataSize(SubID _sub) override;
 	SubID appendData(dev::bytes const& _data) override;
 
+    void appendFunctionEntry() override {}
+    void appendJumpInto(LabelID _labelId, LabelID _retLabelId, int _stackDiffAfter = 0) override {}
+
 private:
 	bool m_evm15 = false; ///< if true, switch to evm1.5 mode
 	int m_stackHeight = 0;

@@ -111,9 +111,14 @@ public:
 	virtual void appendDataSize(SubID _sub) = 0;
 	/// Appends the given data to the assembly and returns its ID.
 	virtual SubID appendData(dev::bytes const& _data) = 0;
+
+    virtual void appendFunctionEntry() = 0;
+
+    virtual void appendJumpInto(LabelID _labelId, LabelID _retLabelId, int _stackDiffAfter = 0) = 0;
+
 };
 
-enum class IdentifierContext { LValue, RValue };
+    enum class IdentifierContext { LValue, RValue };
 
 /// Object that is used to resolve references and generate code for access to identifiers external
 /// to inline assembly (not used in standalone assembly mode).

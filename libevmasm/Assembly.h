@@ -167,6 +167,9 @@ public:
         AssemblyItem tag = m_items.at(tag_index);
         m_annotation.appendJumptarget(jump_index, tag.data());
     }
+    void appendJumpTarget(size_t labelId) {
+        m_annotation.appendJumptarget(m_items.size()-1, labelId);
+    }
 public:
 	// These features are only used by LLL
 	AssemblyItem newPushString(std::string const& _data) { h256 h(dev::keccak256(_data)); m_strings[h] = _data; return AssemblyItem(PushString, h); }

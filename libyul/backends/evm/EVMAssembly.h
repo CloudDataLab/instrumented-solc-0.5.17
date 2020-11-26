@@ -68,7 +68,11 @@ public:
 
 	void appendJumpOut(int _stackDiffAfter) override;
 
-	/// Append a jump-to-immediate operation.
+	void appendFunctionEntry() override {}
+
+    void appendJumpInto(LabelID _labelId, LabelID _retLabelId, int _stackDiffAfter = 0) override {}
+
+    /// Append a jump-to-immediate operation.
 	void appendJumpTo(LabelID _labelId, int _stackDiffAfter) override;
 	/// Append a jump-to-if-immediate operation.
 	void appendJumpToIf(LabelID _labelId) override;

@@ -130,6 +130,19 @@ void EthAssemblyAdapter::appendJumpToIf(LabelID _labelId)
     m_assembly.appendJumpTarget(jumpTag_index);
 }
 
+void EthAssemblyAdapter::appendFunctionEntry() {
+    m_assembly.appendFunctionEntryAnnotation(m_assembly.items().at(m_assembly.items().size()-1));
+}
+
+void EthAssemblyAdapter::appendJumpInto(LabelID _labelId, LabelID _retLabelId, int _stackDiffAfter){
+    appendLabelReference(_labelId);
+    eth::AssemblyItem item(dev::eth::Instruction::JUMP);
+    item.setJumpType(eth::AssemblyItem::JumpType::IntoFunction);
+    m_assembly.append(item);
+    m_assembly.appendJumpTarget(_retLabelId);
+    m_assembly.adjustDeposit(_stackDiffAfter);
+}
+
 void EthAssemblyAdapter::appendBeginsub(LabelID, int)
 {
 	// TODO we could emulate that, though

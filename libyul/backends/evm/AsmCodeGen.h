@@ -64,6 +64,8 @@ public:
 	void appendDataOffset(SubID _sub) override;
 	void appendDataSize(SubID _sub) override;
 	SubID appendData(dev::bytes const& _data) override;
+    void appendFunctionEntry() override;
+    void appendJumpInto(LabelID _labelId, LabelID _retLabelId, int _stackDiffAfter = 0) override;
 
 private:
 	static LabelID assemblyTagToIdentifier(dev::eth::AssemblyItem const& _tag);

@@ -65,6 +65,9 @@ void EthAssemblyAdapter::setStackHeight(int height)
 void EthAssemblyAdapter::appendInstruction(dev::eth::Instruction _instruction)
 {
 	m_assembly.append(_instruction);
+    if (_instruction == dev::eth::Instruction::JUMP || _instruction == dev::eth::Instruction::JUMPI){
+        m_assembly.appendJumpTarget(m_assembly.items().size()-2);
+    }
 }
 
 void EthAssemblyAdapter::appendConstant(u256 const& _constant)

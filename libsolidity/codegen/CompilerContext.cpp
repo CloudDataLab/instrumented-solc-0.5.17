@@ -73,7 +73,7 @@ void CompilerContext::startFunction(Declaration const& _function)
 	m_functionCompilationQueue.startFunction(_function);
     eth::AssemblyItem function_entry = functionEntryLabel(_function);
     *this << function_entry;
-    if(!_function.name().empty() && !_function.isPublic())
+//    if(!_function.name().empty() && !_function.isPublic())
         m_asm->appendFunctionEntryAnnotation(function_entry);
 }
 
